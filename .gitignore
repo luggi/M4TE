@@ -1,0 +1,7 @@
+# c++ stuff
+*.o
+*.d
+/src/irc_bot
+
+# dia stuff
+*~
