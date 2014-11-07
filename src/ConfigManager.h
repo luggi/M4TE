@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <libconfig.h++>
 
 using namespace std;
 
@@ -10,9 +11,9 @@ class ConfigManager {
     public:
         ConfigManager();
 
-        void load(string filename);
+        bool load(string filename);
 
-        void save(string filename);
+        bool save(string filename);
 
         void setDefault();
 
@@ -26,13 +27,15 @@ class ConfigManager {
         string getNickservpassword() const;
 
     private:
+        libconfig::Config cfg;
+
         string server;
         int serverport;
         string serverpassword;
-        vector<string> channels;
         bool ssl;
         string username;
         string nickservpassword;
+        vector<string> channels;
 };
 
 #endif
