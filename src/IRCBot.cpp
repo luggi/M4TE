@@ -1,9 +1,7 @@
 #include <iostream>
 
 #include "IRCBot.h"
-
-#define LOG_TAG "IRCBot: "
-#define LOG_ERROR(msg) std::cerr << LOG_TAG "error: " msg << std::endl;
+#include "log.h"
 
 bool IRCBot::connect(const std::string &ip_address, const unsigned short port)
 {
