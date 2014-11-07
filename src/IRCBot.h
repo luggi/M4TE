@@ -1,6 +1,7 @@
 #ifndef __IRC_BOT_H__
 #define __IRC_BOT_H__
 
+#include <sstream>
 #include <SFML/Network.hpp>
 
 class IRCBot
@@ -11,8 +12,10 @@ class IRCBot
         void process();
         bool connected();
     private:
+        void process_input_line(std::string line);
         sf::TcpSocket my_socket;
         bool my_connected;
+        std::stringstream my_input_stream;
 };
 
 #endif /* __IRC_BOT_H__ */
