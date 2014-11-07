@@ -11,13 +11,16 @@ bool IRCBot::connect(const std::string &ip_address, const unsigned short port)
     if(sf::Socket::Done != status)
     {
         LOG_ERROR("failed to connect.");
+        my_connected = false;
         return false;
     }
+
+    my_connected = true;
 
     return true;
 }
 
-void IRCBot::test()
+void IRCBot::process()
 {
     std::size_t received;
     char buf[4096];
@@ -25,14 +28,19 @@ void IRCBot::test()
     if(sf::Socket::Done != status)
     {
         LOG_ERROR("receive failed.");
+        disconnect();
+        return;
     }
-    std::cout << "RECEIVED:" << std::endl;
-    std::cout << buf << std::endl;
-    std::cout << "END RECEIVED" << std::endl;
 }
 
 void IRCBot::disconnect()
 {
     my_socket.disconnect();
+    my_connected = false;
+}
+
+bool IRCBot::connected()
+{
+    return my_connected;
 }
 
