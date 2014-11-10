@@ -1,0 +1,7 @@
+server = "irc.freenode.net";
+serverport = 6667;
+serverpassword = "";
+ssl = false;
+username = "Heaplock-M4TE";
+nickservpassword = "";
+channels = [ "#itsyndikat", "#heaplock" ];

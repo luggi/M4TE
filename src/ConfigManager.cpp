@@ -14,7 +14,7 @@ ConfigManager::ConfigManager()
     setDefault();
 }
 
-bool ConfigManager::load(string filename)
+bool ConfigManager::load(const string filename)
 {
     try {
         cfg.readFile(filename.c_str());
@@ -43,58 +43,6 @@ bool ConfigManager::load(string filename)
     return true;
 }
 
-bool ConfigManager::save(string filename)
-{
-    Setting &root = cfg.getRoot();
-
-    if (!root.exists("server")) {
-        root.add("server", Setting::TypeString);
-    }
-    root["server"] = server;
-
-    if (!root.exists("serverport")) {
-        root.add("serverport", Setting::TypeInt);
-    }
-    root["serverport"] = serverport;
-
-    if (!root.exists("serverpassword")) {
-        root.add("serverpassword", Setting::TypeString);
-    }
-    root["serverpassword"] = serverpassword;
-
-    if (!root.exists("ssl")) {
-        root.add("ssl", Setting::TypeBoolean);
-    }
-    root["ssl"] = ssl;
-
-    if (!root.exists("username")) {
-        root.add("username", Setting::TypeString);
-    }
-    root["username"] = username;
-
-    if (!root.exists("nickservpassword")) {
-        root.add("nickservpassword", Setting::TypeString);
-    }
-    root["nickservpassword"] = nickservpassword;
-
-    if (root.exists("channels")) {
-        root.remove("channels");
-    }
-    Setting &chan = root.add("channels", Setting::TypeArray);
-    for (string c : channels) {
-        chan.add(Setting::TypeString) = c;
-    }
-
-    try {
-        cfg.writeFile(filename.c_str());
-    } catch (FileIOException e) {
-        LOG_ERROR("could not write config file");
-        return false;
-    }
-
-    return true;
-}
-
 void ConfigManager::setDefault()
 {
     server = "irc.freenode.net";
@@ -108,37 +56,37 @@ void ConfigManager::setDefault()
     channels = {"#itsyndikat", "#heaplock"};
 }
 
-string ConfigManager::getServer() const
+const string ConfigManager::getServer() const
 {
     return server;
 }
 
-int ConfigManager::getServerport() const
+const int ConfigManager::getServerport() const
 {
     return serverport;
 }
 
-string ConfigManager::getServerpassword() const
+const string ConfigManager::getServerpassword() const
 {
     return serverpassword;
 }
 
-vector<string> ConfigManager::getChannels() const
+const vector<string> ConfigManager::getChannels() const
 {
     return channels;
 }
 
-bool ConfigManager::getSsl() const
+const bool ConfigManager::getSsl() const
 {
     return ssl;
 }
 
-string ConfigManager::getUsername() const
+const string ConfigManager::getUsername() const
 {
     return username;
 }
 
-string ConfigManager::getNickservpassword() const
+const string ConfigManager::getNickservpassword() const
 {
     return nickservpassword;
 }

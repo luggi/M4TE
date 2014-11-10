@@ -9,22 +9,19 @@ using namespace std;
 
 class ConfigManager {
     public:
+        // using default settings
         ConfigManager();
 
-        bool load(string filename);
-
-        bool save(string filename);
-
-        void setDefault();
+        bool load(const string filename);
 
         // getter
-        string getServer() const;
-        int getServerport() const;
-        string getServerpassword() const;
-        vector<string> getChannels() const;
-        bool getSsl() const;
-        string getUsername() const;
-        string getNickservpassword() const;
+        const string getServer() const;
+        const int getServerport() const;
+        const string getServerpassword() const;
+        const vector<string> getChannels() const;
+        const bool getSsl() const;
+        const string getUsername() const;
+        const string getNickservpassword() const;
 
     private:
         libconfig::Config cfg;
@@ -36,6 +33,8 @@ class ConfigManager {
         string username;
         string nickservpassword;
         vector<string> channels;
+
+        void setDefault();
 };
 
 #endif
