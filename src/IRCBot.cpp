@@ -53,11 +53,11 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
 {
     bool error = false;
 
+    auto beg = my_network_buffer.begin();
+
     while(!error)
     {
-        // TODO: don't always search from begining as the contents never
-        // change (stuff only gets appended)
-        auto pos = std::search(my_network_buffer.begin(), my_network_buffer.end(),
+        auto pos = std::search(beg, my_network_buffer.end(),
                                delimiters.begin(), delimiters.end());
 
         if(pos != my_network_buffer.end())
@@ -74,6 +74,12 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
             char buf[1024];
             std::size_t received_count;
 
+            // store distance, to later determine where to search from
+            // (we don't want the whole buffer to be searched again
+            // because we can skip stuff that has already been searched
+            // through)
+            auto dist = std::distance(my_network_buffer.begin(), my_network_buffer.end());
+
             if(my_socket.receive(buf, sizeof(buf), received_count) != sf::Socket::Done)
             {
                 LOG_ERROR("receive failed.");
@@ -81,6 +87,16 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
             }
 
             my_network_buffer.insert(my_network_buffer.end(), buf, buf+received_count);
+
+            // determine where to search from in the next iteration
+            beg = my_network_buffer.begin() + dist;
+            // delimiters might be in the buffer up to the last element
+            // (exclusive) otherwise delimiters would already have been found.
+            for(unsigned int i=0;i<delimiters.length()-1;i++)
+            {
+                if(beg == my_network_buffer.begin()) break;
+                beg--;
+            }
         }
     }
 
