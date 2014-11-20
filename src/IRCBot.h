@@ -1,8 +1,11 @@
 #ifndef __IRC_BOT_H__
 #define __IRC_BOT_H__
 
-#include <sstream>
+#include <string>
+#include <deque>
 #include <SFML/Network.hpp>
+
+#define IRC_LINE_DELIMITERS "\r\n"
 
 class IRCBot
 {
@@ -12,10 +15,12 @@ class IRCBot
         void process();
         bool connected();
     private:
-        void process_input_line(std::string line);
+        void process_input_line(const std::string &line);
+        bool read_until(const std::string &delimiters, std::string &line);
+
         sf::TcpSocket my_socket;
         bool my_connected;
-        std::stringstream my_input_stream;
+        std::deque<uint8_t> my_network_buffer;
 };
 
 #endif /* __IRC_BOT_H__ */
