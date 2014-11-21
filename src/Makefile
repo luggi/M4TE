@@ -25,6 +25,13 @@ else
 	CMD := @
 endif
 
+USE_SFML_SOCKETS ?= 1
+
+ifeq ($(USE_SFML_SOCKETS),1)
+	CFLAGS += -DUSE_SFML_SOCKETS
+	CXXFLAGS += -DUSE_SFML_SOCKETS
+endif
+
 .PHONY: release clean
 
 release: CFLAGS += -O2

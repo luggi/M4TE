@@ -3,7 +3,10 @@
 
 #include <string>
 #include <deque>
+
+#ifdef USE_SFML_SOCKETS
 #include <SFML/Network.hpp>
+#endif
 
 #include "ConfigManager.h"
 
@@ -24,7 +27,11 @@ class IRCBot
         bool read_until(const std::string &delimiters, std::string &line);
         bool send_message(const std::string &msg);
 
+#ifdef USE_SFML_SOCKETS
         sf::TcpSocket my_socket;
+#else
+        int my_sockfd;
+#endif
         bool my_connected;
         std::deque<uint8_t> my_network_buffer;
         ConfigManager my_config_manager;

@@ -1,4 +1,13 @@
 #include <iostream>
+#include <algorithm>
+
+#ifndef USE_SFML_SOCKETS
+#include <sys/socket.h> // socket
+#include <strings.h> // bzero, bcopy
+#include <netinet/in.h> // sockaddr_in
+#include <netdb.h> // gethostbyname
+#include <unistd.h> // close
+#endif
 
 #include "IRCBot.h"
 #include "log.h"
@@ -7,19 +16,51 @@ IRCBot::IRCBot(const std::string &config_filename)
 {
     my_config_manager.load(config_filename);
 }
-
+#include <string.h>
 bool IRCBot::connect()
 {
     const std::string &ip_address = my_config_manager.getServer();
     const unsigned short int &port = my_config_manager.getServerport();
 
+#ifdef USE_SFML_SOCKETS
     sf::Socket::Status status = my_socket.connect(ip_address, port);
     if(sf::Socket::Done != status)
     {
-        LOG_ERROR("failed to connect.");
         my_connected = false;
         return false;
     }
+#else
+    struct sockaddr_in server_addr;
+    struct hostent *server;
+
+    my_sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(my_sockfd < 0)
+    {
+        my_connected = false;
+        return false;
+    }
+
+    server = gethostbyname(ip_address.c_str());
+    if(NULL == server)
+    {
+        LOG_ERROR("gethostbyname returned NULL for " + ip_address);
+        my_connected = false;
+        return false;
+    }
+
+    bzero((char*)&server_addr, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    bcopy((char*)server->h_addr, (char*)&server_addr.sin_addr.s_addr,
+        server->h_length);
+    server_addr.sin_port = htons(port);
+
+    if(::connect(my_sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+    {
+        LOG_ERROR(strerror(errno));
+        my_connected = false;
+        return false;
+    }
+#endif
 
     my_connected = true;
 
@@ -61,7 +102,11 @@ bool IRCBot::process()
 
 void IRCBot::disconnect()
 {
+#ifdef USE_SFML_SOCKETS
     my_socket.disconnect();
+#else
+    close(my_sockfd);
+#endif
     my_connected = false;
 }
 
@@ -108,11 +153,20 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
             // through)
             auto dist = std::distance(my_network_buffer.begin(), my_network_buffer.end());
 
+#ifdef USE_SFML_SOCKETS
             if(my_socket.receive(buf, sizeof(buf), received_count) != sf::Socket::Done)
             {
                 LOG_ERROR("receive failed.");
                 return false;
             }
+#else
+            received_count = read(my_sockfd, buf, 1024);
+            if(received_count < 0)
+            {
+                LOG_ERROR("receive failed.");
+                return false;
+            }
+#endif
 
             my_network_buffer.insert(my_network_buffer.end(), buf, buf+received_count);
 
@@ -136,10 +190,18 @@ bool IRCBot::send_message(const std::string &msg)
     LOG_INFO("sending...");
     LOG_INFO(msg);
     LOG_INFO("end sending");
+#ifdef USE_SFML_SOCKETS
     if(my_socket.send(msg.c_str(), msg.length()) != sf::Socket::Done)
     {
         return false;
     }
+#else
+    std::size_t send_count = write(my_sockfd, msg.c_str(), msg.length());
+    if(send_count < 0)
+    {
+        return false;
+    }
+#endif
     return true;
 }
 
