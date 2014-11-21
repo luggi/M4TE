@@ -10,9 +10,9 @@ IRCBot::IRCBot(const std::string &config_filename)
 
 bool IRCBot::connect()
 {
-    std::string ip_address = my_config_manager.getServer();
-    unsigned short int port = my_config_manager.getServerport();
-    
+    const std::string &ip_address = my_config_manager.getServer();
+    const unsigned short int &port = my_config_manager.getServerport();
+
     sf::Socket::Status status = my_socket.connect(ip_address, port);
     if(sf::Socket::Done != status)
     {
@@ -26,17 +26,37 @@ bool IRCBot::connect()
     return true;
 }
 
-void IRCBot::process()
+bool IRCBot::login()
+{
+    const std::string &nick = my_config_manager.getUsername();
+
+    if(!send_message("NICK " + nick + IRC_LINE_DELIMITERS))
+    {
+        return false;
+    }
+
+    // http://stackoverflow.com/questions/5199808/irc-user-message-makes-no-sense-to-me
+    if(!send_message("USER " + nick + " localhost * :" + nick + IRC_LINE_DELIMITERS))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool IRCBot::process()
 {
     std::string line;
 
     if(!read_until(IRC_LINE_DELIMITERS, line))
     {
         disconnect();
-        return;
+        return false;
     }
 
     process_input_line(line);
+
+    return true;
 }
 
 void IRCBot::disconnect()
@@ -109,5 +129,17 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
     }
 
     return !error;
+}
+
+bool IRCBot::send_message(const std::string &msg)
+{
+    LOG_INFO("sending...");
+    LOG_INFO(msg);
+    LOG_INFO("end sending");
+    if(my_socket.send(msg.c_str(), msg.length()) != sf::Socket::Done)
+    {
+        return false;
+    }
+    return true;
 }
 

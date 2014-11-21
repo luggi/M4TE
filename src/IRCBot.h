@@ -15,12 +15,14 @@ class IRCBot
         IRCBot() = delete;
         IRCBot(const std::string &config_filename);
         bool connect();
+        bool login();
         void disconnect();
-        void process();
+        bool process();
         bool connected();
     private:
         void process_input_line(const std::string &line);
         bool read_until(const std::string &delimiters, std::string &line);
+        bool send_message(const std::string &msg);
 
         sf::TcpSocket my_socket;
         bool my_connected;
