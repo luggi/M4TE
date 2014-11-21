@@ -4,8 +4,9 @@
 
 int main(int argc, char *argv[])
 {
-    IRCBot irc_bot;
-    irc_bot.connect("irc.freenode.net", 6667);
+    IRCBot irc_bot("config");
+
+    irc_bot.connect();
 
     while(irc_bot.connected())
     {

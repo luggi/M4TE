@@ -5,12 +5,16 @@
 #include <deque>
 #include <SFML/Network.hpp>
 
+#include "ConfigManager.h"
+
 #define IRC_LINE_DELIMITERS "\r\n"
 
 class IRCBot
 {
     public:
-        bool connect(const std::string &ip_address, const unsigned short port);
+        IRCBot() = delete;
+        IRCBot(const std::string &config_filename);
+        bool connect();
         void disconnect();
         void process();
         bool connected();
@@ -21,6 +25,7 @@ class IRCBot
         sf::TcpSocket my_socket;
         bool my_connected;
         std::deque<uint8_t> my_network_buffer;
+        ConfigManager my_config_manager;
 };
 
 #endif /* __IRC_BOT_H__ */

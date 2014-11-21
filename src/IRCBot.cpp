@@ -3,8 +3,16 @@
 #include "IRCBot.h"
 #include "log.h"
 
-bool IRCBot::connect(const std::string &ip_address, const unsigned short port)
+IRCBot::IRCBot(const std::string &config_filename)
 {
+    my_config_manager.load(config_filename);
+}
+
+bool IRCBot::connect()
+{
+    std::string ip_address = my_config_manager.getServer();
+    unsigned short int port = my_config_manager.getServerport();
+    
     sf::Socket::Status status = my_socket.connect(ip_address, port);
     if(sf::Socket::Done != status)
     {
