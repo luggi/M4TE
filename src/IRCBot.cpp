@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <string.h>
 
 #ifndef USE_SFML_SOCKETS
 #include <sys/socket.h> // socket
@@ -16,7 +17,7 @@ IRCBot::IRCBot(const std::string &config_filename)
 {
     my_config_manager.load(config_filename);
 }
-#include <string.h>
+
 bool IRCBot::connect()
 {
     const std::string &ip_address = my_config_manager.getServer();
