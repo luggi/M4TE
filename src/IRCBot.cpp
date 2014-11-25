@@ -137,9 +137,8 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
         if(pos != my_network_buffer.end())
         {
             // delimiters found, return with data
-            std::string l(my_network_buffer.begin(), pos); /* ignore delimiters */
+            line = std::string(my_network_buffer.begin(), pos); /* ignore delimiters */
             my_network_buffer.erase(my_network_buffer.begin(),pos+delimiters.length());
-            line = l;
             return true;
         }
         else
