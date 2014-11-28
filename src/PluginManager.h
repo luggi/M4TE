@@ -9,16 +9,20 @@
 
 using namespace std;
 
+typedef struct pluginData_t {
+    void* dlopenPtr;
+    plugin* pluginPtr;
+} pluginData_t;
+
 class PluginManager {
     public:
-        const map<string, shared_ptr<Plugin>> getPlugins() const;
-        void load(string pluginName);
-        void unload(string pluginName);
-        void call(string pluginName, string command);
+        const vector<string> getPluginNames() const;
+        int onLoad(string pluginName);
+        int onUnload(string pluginName);
+        int call(string pluginName, string command);
 
     private:
-        map<string, shared_ptr<Plugin>> plugins;
-
+        map<string, pluginData_t> pluginMap;
 };
 
 #endif
