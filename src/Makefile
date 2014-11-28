@@ -7,7 +7,7 @@ DEP         := $(OBJ:.o=.d)
 CFLAGS      := -Wall -Werror -pedantic -std=c99
 CXXFLAGS    := -Wall -Werror -pedantic -std=c++11
 LDFLAGS     :=
-LDLIBS      := -lsfml-network -lsfml-system -lconfig++ -ldl
+LDLIBS      := -lconfig++ -ldl
 
 DEBUG       ?= 0
 VERBOSE     ?= 0
@@ -30,6 +30,7 @@ USE_SFML_SOCKETS ?= 1
 ifeq ($(USE_SFML_SOCKETS),1)
 	CFLAGS += -DUSE_SFML_SOCKETS
 	CXXFLAGS += -DUSE_SFML_SOCKETS
+	LDLIBS += -lsfml-system -lsfml-network
 endif
 
 .PHONY: release clean
