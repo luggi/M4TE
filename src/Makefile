@@ -7,7 +7,7 @@ DEP         := $(OBJ:.o=.d)
 CFLAGS      := -Wall -Werror -pedantic -std=c99
 CXXFLAGS    := -Wall -Werror -pedantic -std=c++11
 LDFLAGS     :=
-LDLIBS      := -lconfig++ -ldl
+LDLIBS      := -ldl
 
 DEBUG       ?= 0
 VERBOSE     ?= 0
@@ -25,12 +25,37 @@ else
 	CMD := @
 endif
 
+ifeq ($(origin PKG_CONFIG), undefined)
+  PKG_CONFIG = pkg-config
+  ifeq ($(shell which $(PKG_CONFIG) 2>/dev/null),)
+    $(error $(PKG_CONFIG) not found)
+  endif
+endif
+
+ifeq ($(origin LIBCONFIGPP_CFLAGS) $(origin LIBCONFIGPP_LDLIBS),undefined undefined)
+  ifeq ($(shell $(PKG_CONFIG) --modversion libconfig++ 2>/dev/null),)
+    $(error libconfig++ development libraries not found)
+  endif
+  LIBCONFIGPP_CFLAGS += $(shell $(PKG_CONFIG) --cflags libconfig++)
+  LIBCONFIGPP_LDLIBS += $(shell $(PKG_CONFIG) --libs libconfig++)
+endif
+CFLAGS += $(LIBCONFIGPP_CFLAGS)
+CXXFLAGS += $(LIBCONFIGPP_CFLAGS)
+LDLIBS += $(LIBCONFIGPP_LDLIBS)
+
 USE_SFML_SOCKETS ?= 1
 
 ifeq ($(USE_SFML_SOCKETS),1)
-	CFLAGS += -DUSE_SFML_SOCKETS
-	CXXFLAGS += -DUSE_SFML_SOCKETS
-	LDLIBS += -lsfml-system -lsfml-network
+    ifeq ($(origin SFMLNETWORK_CFLAGS) $(origin SFMLNETWORK_LDLIBS),undefined undefined)
+      ifeq ($(shell $(PKG_CONFIG) --modversion sfml-network 2>/dev/null),)
+        $(error SFML network development libraries not found)
+      endif
+      SFMLNETWORK_CFLAGS += $(shell $(PKG_CONFIG) --cflags sfml-network)
+      SFMLNETWORK_LDLIBS += $(shell $(PKG_CONFIG) --libs sfml-network)
+    endif
+    CFLAGS += -DUSE_SFML_SOCKETS $(SFMLNETWORK_CFLAGS)
+    CXXFLAGS += -DUSE_SFML_SOCKETS $(SFMLNETWORK_CFLAGS)
+    LDLIBS += $(SFMLNETWORK_LDLIBS)
 endif
 
 .PHONY: release clean
