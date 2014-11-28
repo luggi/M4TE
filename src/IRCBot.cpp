@@ -152,7 +152,7 @@ bool IRCBot::connected()
 
 void IRCBot::process_input_line(const std::string &line)
 {
-    LOG_INFO(line);
+    LOG_INFO("RECEIVED: " + line);
 
     std::vector<std::string> tokens;
 
