@@ -3,5 +3,8 @@
 *.d
 /src/irc_bot
 
+# libs
+*.so
+
 # dia stuff
 *~

@@ -1,4 +1,4 @@
-#include "ConfigManager.h"
+#include "configManager.h"
 
 #include "log.h"
 
@@ -9,12 +9,12 @@
 using namespace std;
 using namespace libconfig;
 
-ConfigManager::ConfigManager()
+configManager::configManager()
 {
     setDefault();
 }
 
-bool ConfigManager::load(const string filename)
+bool configManager::load(const string filename)
 {
     try {
         cfg.readFile(filename.c_str());
@@ -43,7 +43,7 @@ bool ConfigManager::load(const string filename)
     return true;
 }
 
-void ConfigManager::setDefault()
+void configManager::setDefault()
 {
     server = "irc.freenode.net";
     serverport = 6667;
@@ -56,38 +56,37 @@ void ConfigManager::setDefault()
     channels = {"#itsyndikat", "#heaplock"};
 }
 
-const string ConfigManager::getServer() const
+const string configManager::getServer() const
 {
     return server;
 }
 
-const int ConfigManager::getServerport() const
+const int configManager::getServerport() const
 {
     return serverport;
 }
 
-const string ConfigManager::getServerpassword() const
+const string configManager::getServerpassword() const
 {
     return serverpassword;
 }
 
-const vector<string> ConfigManager::getChannels() const
+const vector<string> configManager::getChannels() const
 {
     return channels;
 }
 
-const bool ConfigManager::getSsl() const
+const bool configManager::getSsl() const
 {
     return ssl;
 }
 
-const string ConfigManager::getUsername() const
+const string configManager::getUsername() const
 {
     return username;
 }
 
-const string ConfigManager::getNickservpassword() const
+const string configManager::getNickservpassword() const
 {
     return nickservpassword;
 }
-

@@ -8,7 +8,7 @@
 #include <SFML/Network.hpp>
 #endif
 
-#include "ConfigManager.h"
+#include "configManager.h"
 
 #define IRC_LINE_DELIMITERS "\r\n"
 
@@ -34,7 +34,7 @@ class IRCBot
 #endif
         bool my_connected;
         std::deque<uint8_t> my_network_buffer;
-        ConfigManager my_config_manager;
+        configManager my_config_manager;
 };
 
 #endif /* __IRC_BOT_H__ */

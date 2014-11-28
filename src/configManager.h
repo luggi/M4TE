@@ -1,5 +1,5 @@
-#ifndef CONFIGMANAGER_H_
-#define CONFIGMANAGER_H_
+#ifndef CONFIGMANAGER_H
+#define CONFIGMANAGER_H
 
 #include <string>
 #include <vector>
@@ -7,10 +7,10 @@
 
 using namespace std;
 
-class ConfigManager {
+class configManager {
     public:
         // using default settings
-        ConfigManager();
+        configManager();
 
         bool load(const string filename);
 

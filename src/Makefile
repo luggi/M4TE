@@ -1,5 +1,5 @@
 OUT         := irc_bot
-SRC         := main.cpp IRCBot.cpp ConfigManager.cpp PluginManager.cpp
+SRC         := main.cpp IRCBot.cpp configManager.cpp pluginManager.cpp
 OBJ         := $(patsubst %.c, %.o, $(filter %.c, $(SRC)))
 OBJ         += $(patsubst %.cpp, %.o, $(filter %.cpp, $(SRC)))
 DEP         := $(OBJ:.o=.d)
