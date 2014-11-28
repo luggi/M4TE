@@ -7,7 +7,7 @@ DEP         := $(OBJ:.o=.d)
 CFLAGS      := -Wall -Werror -pedantic -std=c99
 CXXFLAGS    := -Wall -Werror -pedantic -std=c++11
 LDFLAGS     :=
-LDLIBS      := -lsfml-network -lsfml-system -lconfig++
+LDLIBS      := -lsfml-network -lsfml-system -lconfig++ -ldl
 
 DEBUG       ?= 0
 VERBOSE     ?= 0

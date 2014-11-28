@@ -5,6 +5,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 #include <string>
 
 using namespace std;
@@ -22,7 +23,7 @@ class PluginManager {
         int call(string pluginName, string command);
 
     private:
-        map<string, pluginData_t> pluginMap;
+        map<string, pluginData_t> my_plugins;
 };
 
 #endif
