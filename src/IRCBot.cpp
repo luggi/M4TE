@@ -13,6 +13,40 @@
 #include "IRCBot.h"
 #include "log.h"
 
+// http://stackoverflow.com/questions/236129/split-a-string-in-c
+template < class ContainerT >
+void tokenize(const std::string& str, ContainerT& tokens,
+              const std::string& delimiters = " ", bool trimEmpty = false)
+{
+   std::string::size_type pos, lastPos = 0;
+
+   using value_type = typename ContainerT::value_type;
+   using size_type  = typename ContainerT::size_type;
+
+   while(true)
+   {
+      pos = str.find_first_of(delimiters, lastPos);
+      if(pos == std::string::npos)
+      {
+         pos = str.length();
+
+         if(pos != lastPos || !trimEmpty)
+            tokens.push_back(value_type(str.data()+lastPos,
+                  (size_type)pos-lastPos ));
+
+         break;
+      }
+      else
+      {
+         if(pos != lastPos || !trimEmpty)
+            tokens.push_back(value_type(str.data()+lastPos,
+                  (size_type)pos-lastPos ));
+      }
+
+      lastPos = pos + 1;
+   }
+}
+
 IRCBot::IRCBot(const std::string &config_filename)
 {
     my_config_manager.load(config_filename);
@@ -72,13 +106,13 @@ bool IRCBot::login()
 {
     const std::string &nick = my_config_manager.getUsername();
 
-    if(!send_message("NICK " + nick + IRC_LINE_DELIMITERS))
+    if(!send_message("NICK " + nick))
     {
         return false;
     }
 
     // http://stackoverflow.com/questions/5199808/irc-user-message-makes-no-sense-to-me
-    if(!send_message("USER " + nick + " localhost * :" + nick + IRC_LINE_DELIMITERS))
+    if(!send_message("USER " + nick + " localhost * :" + nick))
     {
         return false;
     }
@@ -118,9 +152,16 @@ bool IRCBot::connected()
 
 void IRCBot::process_input_line(const std::string &line)
 {
-    LOG_INFO("<<<<< line start");
     LOG_INFO(line);
-    LOG_INFO(">>>>> line end");
+
+    std::vector<std::string> tokens;
+
+    tokenize(line, tokens, "\t ");
+
+    if("PING" == tokens[0])
+    {
+        send_message("PONG " + tokens[1]);
+    }
 }
 
 bool IRCBot::read_until(const std::string &delimiters, std::string &line)
@@ -187,16 +228,18 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
 
 bool IRCBot::send_message(const std::string &msg)
 {
-    LOG_INFO("sending...");
-    LOG_INFO(msg);
-    LOG_INFO("end sending");
+    std::string the_msg = msg;
+    the_msg += IRC_LINE_DELIMITERS;
+
+    LOG_INFO("SENDING: " + msg);
+
 #ifdef USE_SFML_SOCKETS
-    if(my_socket.send(msg.c_str(), msg.length()) != sf::Socket::Done)
+    if(my_socket.send(the_msg.c_str(), the_msg.length()) != sf::Socket::Done)
     {
         return false;
     }
 #else
-    std::size_t send_count = write(my_sockfd, msg.c_str(), msg.length());
+    std::size_t send_count = write(my_sockfd, the_msg.c_str(), the_msg.length());
     if(send_count < 0)
     {
         return false;
