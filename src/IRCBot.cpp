@@ -47,7 +47,7 @@ void tokenize(const std::string& str, ContainerT& tokens,
    }
 }
 
-IRCBot::IRCBot(const std::string &config_filename)
+IRCBot::IRCBot(const std::string &config_filename) : my_connected(false)
 {
     my_config_manager.load(config_filename);
 }
