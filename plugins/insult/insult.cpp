@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -13,16 +14,15 @@ class insult : public plugin {
     private:
 
         static const vector<string> insults;
+        static default_random_engine generator;
+        static uniform_int_distribution<int> distribution;
 
     public:
 
-        insult() {
-            srand (unsigned(time(NULL)));
-        }
-
         string call(const string command) const
         {
-            return insults[rand() % insults.size()];
+            int random = distribution(generator);
+            return insults[random];
         }
 };
 
@@ -39,6 +39,8 @@ const vector<string> insult::insults {
     "You running crossfire or are you just s.s.s.stuttering?",
     "You're about as useful as Anne Franks drum kit",
 };
+
+uniform_int_distribution<int> insult::distribution(0, insult::insults.size());
 
 extern "C" plugin* create() {
     return new insult;
