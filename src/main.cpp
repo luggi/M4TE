@@ -5,9 +5,18 @@
 #include "log.h"
 #include "IRCBot.h"
 
+volatile sig_atomic_t sigint_received = 0;
+
+void signal_handler(int s)
+{
+    sigint_received = 1;
+}
+
 int main(int argc, char *argv[])
 {
     IRCBot irc_bot("config");
+
+    signal(SIGINT, signal_handler);
 
     irc_bot.connect();
 
@@ -31,6 +40,10 @@ int main(int argc, char *argv[])
 
     while(irc_bot.connected())
     {
+        if(sigint_received)
+        {
+            break;
+        }
         if(!irc_bot.process())
         {
             LOG_ERROR("processing network data failed");
