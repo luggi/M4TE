@@ -47,7 +47,7 @@ void tokenize(const std::string& str, ContainerT& tokens,
    }
 }
 
-IRCBot::IRCBot(const std::string &config_filename) : my_connected(false)
+IRCBot::IRCBot(const std::string &config_filename) : my_connected(false), my_notice_received(false), my_motd_received(false)
 {
     my_config_manager.load(config_filename);
 }
@@ -150,6 +150,31 @@ bool IRCBot::connected()
     return my_connected;
 }
 
+void IRCBot::join_channels()
+{
+    std::vector<std::string> channels = my_config_manager.getChannels();
+    for(auto &channel : channels)
+    {
+        send_message("JOIN " + channel);
+    }
+}
+
+void IRCBot::wait_for_notice()
+{
+    while(process())
+    {
+        if(my_notice_received) return;
+    }
+}
+
+void IRCBot::wait_for_motd()
+{
+    while(process())
+    {
+        if(my_motd_received) return;
+    }
+}
+
 void IRCBot::process_input_line(const std::string &line)
 {
     LOG_INFO("RECEIVED: " + line);
@@ -161,6 +186,16 @@ void IRCBot::process_input_line(const std::string &line)
     if("PING" == tokens[0])
     {
         send_message("PONG " + tokens[1]);
+    }
+
+    if("376" == tokens[1])
+    {
+        my_motd_received = true;
+    }
+
+    if("NOTICE" == tokens[1])
+    {
+        my_notice_received = true;
     }
 }
 

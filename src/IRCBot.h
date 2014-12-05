@@ -22,6 +22,10 @@ class IRCBot
         void disconnect();
         bool process();
         bool connected();
+        void join_channels();
+
+        void wait_for_notice();
+        void wait_for_motd();
     private:
         void process_input_line(const std::string &line);
         bool read_until(const std::string &delimiters, std::string &line);
@@ -33,6 +37,8 @@ class IRCBot
         int my_sockfd;
 #endif
         bool my_connected;
+        bool my_notice_received;
+        bool my_motd_received;
         std::deque<uint8_t> my_network_buffer;
         configManager my_config_manager;
 };
