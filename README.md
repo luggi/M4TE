@@ -10,4 +10,4 @@ Your best buddy in IRC
 
 ## Requirements
 
-- [SFML](http://www.sfml-dev.org/)
+- [SFML](http://www.sfml-dev.org/) (optional)
