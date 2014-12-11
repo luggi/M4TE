@@ -1,8 +1,9 @@
-DiceRoll.so: DiceRoll.o
+diceroll.so: diceroll.o
 	g++ -shared -o $@ $^
+    cp diceroll.so ../../plugins/
 
 %.o: %.cpp
-	g++ -Wall -Werror -std=c++11 -I../../src -fPIC -c DiceRoll.cpp
+	g++ -Wall -Werror -std=c++11 -I../../src -fPIC -c diceroll.cpp
 
 clean:
-	rm -f DiceRoll.so *.o
+	rm -f libdiceroll.so *.o
