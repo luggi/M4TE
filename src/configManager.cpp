@@ -35,6 +35,7 @@ bool configManager::load(const string filename)
 
     if (cfg.exists("channels") && cfg.lookup("channels").isArray()) {
         Setting &chans = cfg.lookup("channels");
+        channels.clear();
         for (int i = 0; i < chans.getLength(); i++) {
             channels.push_back(chans[i]);
         }
@@ -53,7 +54,7 @@ void configManager::setDefault()
     nickservpassword = "";
 
     channels.clear();
-    channels = {"#itsyndikat", "#heaplock"};
+    channels = {"#heaplock"};
 }
 
 const string configManager::getServer() const
