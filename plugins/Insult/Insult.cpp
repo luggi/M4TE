@@ -1,4 +1,4 @@
-#include "plugin.h"
+#include "Plugin.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -9,16 +9,14 @@
 
 using namespace std;
 
-class insult : public plugin {
+class Insult : public Plugin {
 
     private:
-
         static const vector<string> insults;
         static default_random_engine generator;
         static uniform_int_distribution<int> distribution;
 
     public:
-
         string call(const string command) const
         {
             int random = distribution(generator);
@@ -26,7 +24,7 @@ class insult : public plugin {
         }
 };
 
-const vector<string> insult::insults {
+const vector<string> Insult::insults {
     "Bring it noob. I'll give ya memory errors for life!",
     "Does your ass ever get jealous of the amount of shit that comes out of your mouth?",
     "God must of had a broken gpu when he created you, theres artifacts all over your face.",
@@ -40,12 +38,12 @@ const vector<string> insult::insults {
     "You're about as useful as Anne Franks drum kit",
 };
 
-uniform_int_distribution<int> insult::distribution(0, insult::insults.size());
+uniform_int_distribution<int> Insult::distribution(0, Insult::insults.size());
 
-extern "C" plugin* create() {
-    return new insult;
+extern "C" Plugin* create() {
+    return new Insult;
 }
 
-extern "C" void destroy(plugin* p) {
+extern "C" void destroy(Plugin* p) {
     delete p;
 }

@@ -1,4 +1,4 @@
-#include "plugin.h"
+#include "Plugin.h"
 
 #include <iostream>
 #include <ctime>
@@ -6,9 +6,9 @@
 
 using namespace std;
 
-class diceRoll : public plugin {
+class DiceRoll : public Plugin {
     public:
-        diceRoll()
+        DiceRoll()
         {
             srand (unsigned(time(NULL)));
         }
@@ -21,10 +21,10 @@ class diceRoll : public plugin {
         }
 };
 
-extern "C" plugin* create() {
-    return new diceRoll;
+extern "C" Plugin* create() {
+    return new DiceRoll;
 }
 
-extern "C" void destroy(plugin* p) {
+extern "C" void destroy(Plugin* p) {
     delete p;
 }

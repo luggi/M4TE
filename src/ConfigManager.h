@@ -7,10 +7,10 @@
 
 using namespace std;
 
-class configManager {
+class ConfigManager {
     public:
         // using default settings
-        configManager();
+        ConfigManager();
 
         bool load(const string filename);
 

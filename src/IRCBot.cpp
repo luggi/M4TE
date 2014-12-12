@@ -3,11 +3,11 @@
 #include <string.h>
 
 #ifndef USE_SFML_SOCKETS
-#include <sys/socket.h> // socket
-#include <strings.h> // bzero, bcopy
-#include <netinet/in.h> // sockaddr_in
-#include <netdb.h> // gethostbyname
-#include <unistd.h> // close
+#include <sys/socket.h>
+#include <strings.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <unistd.h>
 #endif
 
 #include "IRCBot.h"
@@ -23,24 +23,22 @@ void tokenize(const std::string& str, ContainerT& tokens,
    using value_type = typename ContainerT::value_type;
    using size_type  = typename ContainerT::size_type;
 
-   while(true)
-   {
+   while (true) {
       pos = str.find_first_of(delimiters, lastPos);
-      if(pos == std::string::npos)
-      {
+      if (pos == std::string::npos) {
          pos = str.length();
 
-         if(pos != lastPos || !trimEmpty)
+         if (pos != lastPos || !trimEmpty) {
             tokens.push_back(value_type(str.data()+lastPos,
                   (size_type)pos-lastPos ));
+        }
 
          break;
-      }
-      else
-      {
-         if(pos != lastPos || !trimEmpty)
+      } else {
+         if (pos != lastPos || !trimEmpty) {
             tokens.push_back(value_type(str.data()+lastPos,
                   (size_type)pos-lastPos ));
+        }
       }
 
       lastPos = pos + 1;
@@ -59,8 +57,7 @@ bool IRCBot::connect()
 
 #ifdef USE_SFML_SOCKETS
     sf::Socket::Status status = my_socket.connect(ip_address, port);
-    if(sf::Socket::Done != status)
-    {
+    if (sf::Socket::Done != status) {
         my_connected = false;
         return false;
     }
@@ -69,15 +66,13 @@ bool IRCBot::connect()
     struct hostent *server;
 
     my_sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if(my_sockfd < 0)
-    {
+    if (my_sockfd < 0) {
         my_connected = false;
         return false;
     }
 
     server = gethostbyname(ip_address.c_str());
-    if(NULL == server)
-    {
+    if (NULL == server) {
         LOG_ERROR("gethostbyname returned NULL for " + ip_address);
         my_connected = false;
         return false;
@@ -89,8 +84,7 @@ bool IRCBot::connect()
         server->h_length);
     server_addr.sin_port = htons(port);
 
-    if(::connect(my_sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
-    {
+    if (::connect(my_sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         LOG_ERROR(strerror(errno));
         my_connected = false;
         return false;
@@ -106,14 +100,12 @@ bool IRCBot::login()
 {
     const std::string &nick = my_config_manager.getUsername();
 
-    if(!send_message("NICK " + nick))
-    {
+    if (!send_message("NICK " + nick)) {
         return false;
     }
 
     // http://stackoverflow.com/questions/5199808/irc-user-message-makes-no-sense-to-me
-    if(!send_message("USER " + nick + " localhost * :" + nick))
-    {
+    if (!send_message("USER " + nick + " localhost * :" + nick)) {
         return false;
     }
 
@@ -124,8 +116,7 @@ bool IRCBot::process()
 {
     std::string line;
 
-    if(!read_until(IRC_LINE_DELIMITERS, line))
-    {
+    if (!read_until(IRC_LINE_DELIMITERS, line)) {
         disconnect();
         return false;
     }
@@ -153,25 +144,24 @@ bool IRCBot::connected()
 void IRCBot::join_channels()
 {
     std::vector<std::string> channels = my_config_manager.getChannels();
-    for(auto &channel : channels)
-    {
+    for (auto &channel : channels) {
         send_message("JOIN " + channel);
     }
 }
 
 void IRCBot::wait_for_notice()
 {
-    while(process())
-    {
-        if(my_notice_received) return;
+    while (process()) {
+        if (my_notice_received)
+            return;
     }
 }
 
 void IRCBot::wait_for_motd()
 {
-    while(process())
-    {
-        if(my_motd_received) return;
+    while (process()) {
+        if (my_motd_received)
+            return;
     }
 }
 
@@ -183,20 +173,14 @@ void IRCBot::process_input_line(const std::string &line)
 
     tokenize(line, tokens, "\t ");
 
-    if("PING" == tokens[0])
-    {
+    if ("PING" == tokens[0])
         send_message("PONG " + tokens[1]);
-    }
 
-    if("376" == tokens[1])
-    {
+    if ("376" == tokens[1])
         my_motd_received = true;
-    }
 
-    if("NOTICE" == tokens[1])
-    {
+    if ("NOTICE" == tokens[1])
         my_notice_received = true;
-    }
 }
 
 bool IRCBot::read_until(const std::string &delimiters, std::string &line)
@@ -205,20 +189,16 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
 
     auto beg = my_network_buffer.begin();
 
-    while(!error)
-    {
+    while (!error) {
         auto pos = std::search(beg, my_network_buffer.end(),
                                delimiters.begin(), delimiters.end());
 
-        if(pos != my_network_buffer.end())
-        {
+        if (pos != my_network_buffer.end()) {
             // delimiters found, return with data
             line = std::string(my_network_buffer.begin(), pos); /* ignore delimiters */
             my_network_buffer.erase(my_network_buffer.begin(),pos+delimiters.length());
             return true;
-        }
-        else
-        {
+        } else {
             // need to get more data
             char buf[1024];
             std::size_t received_count;
@@ -230,15 +210,13 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
             auto dist = std::distance(my_network_buffer.begin(), my_network_buffer.end());
 
 #ifdef USE_SFML_SOCKETS
-            if(my_socket.receive(buf, sizeof(buf), received_count) != sf::Socket::Done)
-            {
+            if (my_socket.receive(buf, sizeof(buf), received_count) != sf::Socket::Done) {
                 LOG_ERROR("receive failed.");
                 return false;
             }
 #else
             received_count = read(my_sockfd, buf, 1024);
-            if(received_count < 0)
-            {
+            if (received_count < 0) {
                 LOG_ERROR("receive failed.");
                 return false;
             }
@@ -250,8 +228,7 @@ bool IRCBot::read_until(const std::string &delimiters, std::string &line)
             beg = my_network_buffer.begin() + dist;
             // delimiters might be in the buffer up to the last element
             // (exclusive) otherwise delimiters would already have been found.
-            for(unsigned int i=0;i<delimiters.length()-1;i++)
-            {
+            for (unsigned int i=0;i<delimiters.length()-1;i++) {
                 if(beg == my_network_buffer.begin()) break;
                 beg--;
             }
@@ -269,16 +246,12 @@ bool IRCBot::send_message(const std::string &msg)
     LOG_INFO("SENDING: " + msg);
 
 #ifdef USE_SFML_SOCKETS
-    if(my_socket.send(the_msg.c_str(), the_msg.length()) != sf::Socket::Done)
-    {
+    if (my_socket.send(the_msg.c_str(), the_msg.length()) != sf::Socket::Done)
         return false;
-    }
 #else
     std::size_t send_count = write(my_sockfd, the_msg.c_str(), the_msg.length());
-    if(send_count < 0)
-    {
+    if (send_count < 0)
         return false;
-    }
 #endif
     return true;
 }

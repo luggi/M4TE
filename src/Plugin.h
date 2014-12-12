@@ -6,9 +6,9 @@
 using namespace std;
 
 // plugin base class
-class plugin {
+class Plugin {
     public:
-        virtual ~plugin() {}
+        virtual ~Plugin() {}
 
         virtual string call(string command) const = 0;
     private:
@@ -16,7 +16,7 @@ class plugin {
 };
 
 // class factories
-typedef plugin* create_t();
-typedef void destroy_t(plugin*);
+typedef Plugin* create_t();
+typedef void destroy_t(Plugin*);
 
 #endif

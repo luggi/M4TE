@@ -1,7 +1,7 @@
-#include "pluginManager.h"
+#include "PluginManager.h"
 
 #include "log.h"
-#include "plugin.h"
+#include "Plugin.h"
 
 #include <map>
 #include <memory>
@@ -12,13 +12,13 @@
 
 using namespace std;
 
-pluginManager::~pluginManager() {
+PluginManager::~PluginManager() {
     for (auto &name : getPluginNames()) {
         unload(name);
     }
 }
 
-const vector<string> pluginManager::getPluginNames() const {
+const vector<string> PluginManager::getPluginNames() const {
     vector<string> names;
 
     for (auto &it : my_plugins) {
@@ -28,10 +28,10 @@ const vector<string> pluginManager::getPluginNames() const {
     return names;
 }
 
-int pluginManager::load(const string name) {
+int PluginManager::load(const string name) {
     string path = "./plugins/" + name + ".so";
 
-   // load a new object
+    // load a new object
     void* object = dlopen(path.c_str(), RTLD_LAZY);
     if (!object) {
         // failed to load plugin
@@ -56,20 +56,19 @@ int pluginManager::load(const string name) {
     return 0;
 }
 
-int pluginManager::unload (const string name) {
+int PluginManager::unload (const string name) {
     const char* dlsym_error;
     destroy_t* destroy_plugin = (destroy_t*) dlsym(my_plugins[name].dlopenPtr, "destroy");
     dlsym_error = dlerror();
-    if (dlsym_error) {
+    if (dlsym_error)
         return -1;
-    }
 
     destroy_plugin(my_plugins[name].pluginPtr);
     my_plugins.erase(name);
     return 0;
 }
 
-int pluginManager::call(const string pluginName, const string command) {
+int PluginManager::call(const string pluginName, const string command) {
     // get plugin
     auto it = my_plugins.find(pluginName);
     if (it == my_plugins.end()) {

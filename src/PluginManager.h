@@ -1,7 +1,7 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include "plugin.h"
+#include "Plugin.h"
 
 #include <map>
 #include <memory>
@@ -12,12 +12,12 @@ using namespace std;
 
 struct pluginData {
     void *dlopenPtr;
-    plugin *pluginPtr;
+    Plugin *pluginPtr;
 };
 
-class pluginManager {
+class PluginManager {
     public:
-        ~pluginManager();
+        ~PluginManager();
 
         const vector<string> getPluginNames() const;
         int load(const string pluginName);
