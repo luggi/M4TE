@@ -68,7 +68,7 @@ int PluginManager::unload (const string name) {
     return 0;
 }
 
-int PluginManager::call(const string pluginName, const string command) {
+int PluginManager::call(const string pluginName,const string channel, const string nick, const string command) {
     // get plugin
     auto it = my_plugins.find(pluginName);
     if (it == my_plugins.end()) {
@@ -77,6 +77,6 @@ int PluginManager::call(const string pluginName, const string command) {
     }
 
     // invoke `call()`
-    it->second.pluginPtr->call(command);
+    it->second.pluginPtr->call(channel, nick, command);
     return 0;
 }

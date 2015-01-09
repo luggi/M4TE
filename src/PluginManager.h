@@ -22,7 +22,7 @@ class PluginManager {
         const vector<string> getPluginNames() const;
         int load(const string pluginName);
         int unload(const string pluginName);
-        int call(const string pluginName, const string command);
+        int call(const string pluginName, const string channel, const string nick, const string command);
 
     private:
         map<string, pluginData> my_plugins;

@@ -10,7 +10,7 @@ class Plugin {
     public:
         virtual ~Plugin() {}
 
-        virtual string call(string command) const = 0;
+        virtual string call(const string Channel, const string Nick, const string command) const = 0;
     private:
         string name;
 };

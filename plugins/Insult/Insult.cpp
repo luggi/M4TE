@@ -17,7 +17,7 @@ class Insult : public Plugin {
         static uniform_int_distribution<int> distribution;
 
     public:
-        string call(const string command) const
+        string call(const string channel, const string nick, const string command) const
         {
             int random = distribution(generator);
             return insults[random];
