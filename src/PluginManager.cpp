@@ -70,7 +70,7 @@ int PluginManager::unload (const string name) {
 }
 
 
-int PluginManager::call(const string pluginName,const string channel, const string nick, const string command) {
+std::string PluginManager::call(const string pluginName,const string channel, const string nick, const string command) {
     std::string plugin_name_lower = pluginName;
     std::transform(plugin_name_lower.begin(), plugin_name_lower.end(), plugin_name_lower.begin(), ::tolower);
 
@@ -82,6 +82,5 @@ int PluginManager::call(const string pluginName,const string channel, const stri
     }
 
     // invoke `call()`
-    it->second.pluginPtr->call(channel, nick, command);
-    return 0;
+    return it->second.pluginPtr->call(channel, nick, command);
 }
