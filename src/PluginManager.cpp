@@ -3,10 +3,11 @@
 #include "log.h"
 #include "Plugin.h"
 
+#include <algorithm>
 #include <map>
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <dlfcn.h>
 
@@ -68,11 +69,15 @@ int PluginManager::unload (const string name) {
     return 0;
 }
 
+
 int PluginManager::call(const string pluginName,const string channel, const string nick, const string command) {
+    std::string plugin_name_lower = pluginName;
+    std::transform(plugin_name_lower.begin(), plugin_name_lower.end(), plugin_name_lower.begin(), ::tolower);
+
     // get plugin
-    auto it = my_plugins.find(pluginName);
+    auto it = my_plugins.find(plugin_name_lower);
     if (it == my_plugins.end()) {
-        LOG_ERROR("plugin " + pluginName + " not loaded");
+        LOG_ERROR("plugin " + plugin_name_lower + " not loaded");
         return -1;
     }
 
