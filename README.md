@@ -16,7 +16,8 @@ Your best buddy in IRC
 - [ ] templates
 - [x] inheritance
     - see plugins
-- [ ] lambda function
+- [x] lambda function
+    - see `plugins/MiniCalc/MiniCalc.cpp`
 - [ ] concurrency
 
 ## Requirements
