@@ -9,6 +9,7 @@
 #endif
 
 #include "ConfigManager.h"
+#include "PluginManager.h"
 
 #define IRC_LINE_DELIMITERS "\r\n"
 
@@ -42,6 +43,7 @@ class IRCBot
         bool my_motd_received;
         std::deque<uint8_t> my_network_buffer;
         ConfigManager my_config_manager;
+        PluginManager my_plugin_manager;
 };
 
 #endif

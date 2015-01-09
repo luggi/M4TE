@@ -176,11 +176,52 @@ void IRCBot::process_input_line(const std::string &line)
     if ("PING" == tokens[0])
         send_message("PONG " + tokens[1]);
 
-    if ("376" == tokens[1])
-        my_motd_received = true;
+    if(tokens.size() > 1)
+    {
+        if ("376" == tokens[1])
+            my_motd_received = true;
 
-    if ("NOTICE" == tokens[1])
-        my_notice_received = true;
+        if ("NOTICE" == tokens[1])
+            my_notice_received = true;
+    }
+
+    if(tokens.size() > 3)
+    {
+        if("PRIVMSG" == tokens[1]) {
+            std::string channel;
+            std::string plugin_name;
+
+            auto pm_pos = line.find("PRIVMSG");
+            channel = tokens[2];
+
+            if(pm_pos == std::string::npos) {
+                LOG_ERROR("BUG!!! PRIVMSG in tokens but not in line");
+            }
+
+            pm_pos += ((std::string)"PRIVMSG").length();
+
+            channel = tokens[2];
+            plugin_name = tokens[3];
+
+            if(plugin_name.length() > 1 && plugin_name[0] == ':' && plugin_name[1] == '!') {
+                std::string command;
+                auto command_pos = line.find(plugin_name, pm_pos);
+
+                command_pos += plugin_name.length();
+
+                plugin_name.erase(0,2);
+
+                while(command_pos < line.length() && isspace(line[command_pos])) {
+                    command_pos++;
+                }
+
+                command = line.substr(command_pos);
+
+                my_plugin_manager.call(plugin_name, channel, command);
+            }
+            // else not a command            
+        }
+    }
 }
 
 bool IRCBot::read_until(const std::string &delimiters, std::string &line)
