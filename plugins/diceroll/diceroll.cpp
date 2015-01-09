@@ -1,25 +1,30 @@
 #include "Plugin.h"
 
 #include <iostream>
-#include <ctime>
-#include <cstdlib>
+#include <random>
 
 using namespace std;
 
 class DiceRoll : public Plugin {
+    private:
+        static default_random_engine generator;
+        static uniform_int_distribution<int> distribution;
+
+
     public:
-        DiceRoll()
-        {
-            srand (unsigned(time(NULL)));
+        DiceRoll() {
         }
 
         string call(const string channel, const string nick, const string command) const
         {
-            int randomNumber = rand() % 5 + 1;
+            int randomNumber = distribution(generator);
             string str = to_string(randomNumber);
             return str;
         }
 };
+
+uniform_int_distribution<int> DiceRoll::distribution(1, 6);
+default_random_engine DiceRoll::generator;
 
 extern "C" Plugin* create() {
     return new DiceRoll;
