@@ -4,6 +4,7 @@
 #include "Plugin.h"
 
 #include <algorithm>
+#include <glob.h>
 #include <map>
 #include <memory>
 #include <string>
@@ -13,10 +14,25 @@
 
 using namespace std;
 
+// from: http://stackoverflow.com/a/24703135
+vector<string> globVector(const string& pattern){
+    glob_t glob_result;
+    glob(pattern.c_str(),GLOB_TILDE,NULL,&glob_result);
+    vector<string> files;
+    for(unsigned int i=0;i<glob_result.gl_pathc;++i){
+        files.push_back(string(glob_result.gl_pathv[i]));
+    }
+    globfree(&glob_result);
+    return files;
+}
+
 PluginManager::PluginManager() {
     vector<string> files = globVector("./plugins/*.so");
     
     for (auto &name : files) {
+        name = name.substr(((std::string)"./plugins/").length());
+        name.erase(name.find(".so"));
+        LOG_INFO("loading plugin " + name);
         load(name);
     }
 }
@@ -44,7 +60,7 @@ int PluginManager::load(const string name) {
     void* object = dlopen(path.c_str(), RTLD_LAZY);
     if (!object) {
         // failed to load plugin
-        LOG_ERROR("loading plugin " + path + " failed!");
+        LOG_ERROR("loading plugin " + path + " failed! " + dlerror());
         return -1;
     }
     my_plugins[name].dlopenPtr = object;

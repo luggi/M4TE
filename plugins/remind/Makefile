@@ -1,9 +1,9 @@
-Remind.so: Remind.o
+remind.so: remind.o
 	g++ -shared -o $@ $^
-	cp $@ ../../plugins/
+	cp $@ ../../src/plugins/
 
 %.o: %.cpp
 	g++ -Wall -Werror -std=c++11 -I../../src -fPIC -c $^
 
 clean:
-	rm -f Remind.so *.o
+	rm -f remind.so *.o

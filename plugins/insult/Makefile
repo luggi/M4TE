@@ -1,9 +1,9 @@
-Insult.so: Insult.o
+insult.so: insult.o
 	g++ -shared -o $@ $^
-	cp $@ ../../plugins/
+	cp $@ ../../src/plugins/
 
 %.o: %.cpp
 	g++ -Wall -Werror -std=c++11 -I../../src -fPIC -c $^
 
 clean:
-	rm -f Insult.so *.o
+	rm -f insult.so *.o

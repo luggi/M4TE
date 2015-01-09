@@ -13,13 +13,14 @@ class Insult : public Plugin {
 
     private:
         static const vector<string> insults;
-        static default_random_engine generator;
-        static uniform_int_distribution<int> distribution;
 
     public:
+        Insult() {
+            srand (unsigned(time(NULL)));
+        }
         string call(const string channel, const string nick, const string command) const
         {
-            int random = distribution(generator);
+            int random = rand() % insults.size();
             return insults[random];
         }
 };
@@ -37,8 +38,6 @@ const vector<string> Insult::insults {
     "You running crossfire or are you just s.s.s.stuttering?",
     "You're about as useful as Anne Franks drum kit",
 };
-
-uniform_int_distribution<int> Insult::distribution(0, Insult::insults.size());
 
 extern "C" Plugin* create() {
     return new Insult;
