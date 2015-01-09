@@ -188,8 +188,19 @@ void IRCBot::process_input_line(const std::string &line)
     if(tokens.size() > 3)
     {
         if("PRIVMSG" == tokens[1]) {
+            std::string nick;
             std::string channel;
             std::string plugin_name;
+
+            nick = tokens[0];
+            auto nickend = nick.find("!");
+            if(nickend != std::string::npos) {
+                nick = nick.substr(0,nickend);
+            }
+
+            if(nick.length() > 0 && nick[0] == ':') {
+                nick.erase(0,1);
+            }
 
             auto pm_pos = line.find("PRIVMSG");
             channel = tokens[2];
@@ -205,6 +216,7 @@ void IRCBot::process_input_line(const std::string &line)
 
             if(plugin_name.length() > 1 && plugin_name[0] == ':' && plugin_name[1] == '!') {
                 std::string command;
+                std::string response;
                 auto command_pos = line.find(plugin_name, pm_pos);
 
                 command_pos += plugin_name.length();
@@ -217,7 +229,11 @@ void IRCBot::process_input_line(const std::string &line)
 
                 command = line.substr(command_pos);
 
-                my_plugin_manager.call(plugin_name, channel, command);
+                response = my_plugin_manager.call(plugin_name, channel, nick, command);
+
+                if(response != "") {
+                    send_message("PRIVMSG " + channel + " :" + response);
+                }
             }
             // else not a command            
         }

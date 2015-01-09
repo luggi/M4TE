@@ -78,7 +78,7 @@ std::string PluginManager::call(const string pluginName,const string channel, co
     auto it = my_plugins.find(plugin_name_lower);
     if (it == my_plugins.end()) {
         LOG_ERROR("plugin " + plugin_name_lower + " not loaded");
-        return -1;
+        return "";
     }
 
     // invoke `call()`
