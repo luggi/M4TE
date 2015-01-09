@@ -13,6 +13,14 @@
 
 using namespace std;
 
+PluginManager::PluginManager() {
+    vector<string> files = globVector("./plugins/*.so");
+    
+    for (auto &name : files) {
+        load(name);
+    }
+}
+
 PluginManager::~PluginManager() {
     for (auto &name : getPluginNames()) {
         unload(name);
