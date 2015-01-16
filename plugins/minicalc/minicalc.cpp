@@ -12,9 +12,9 @@ class MiniCalc : public Plugin {
         MiniCalc() {}
 
         // call: 12 45
-        string call(const string command) const
+        string call(const string Channel, const string Nick, const string command) const
         {
-            auto add = [] (int x, int y) {return x + (y - 42);};
+            auto add = [] (int x, int y) {return x + 2*y;};
             auto add_reverse = bind(add, _2, _1);
 
             auto delim = command.find(" ");
