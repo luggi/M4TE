@@ -11,7 +11,7 @@ class Remind : public Plugin {
         Remind()
         { }
 
-        string call(const string channel, const string nick, const string command) const
+        string call(const string channel, const string nick, const string command)
         {
             return "This has to be implemented some time...";
         }
