@@ -17,7 +17,7 @@ class Pushpop : public Plugin {
             stack.clear();
         }
 
-        string call(const string channel, const string nick, const string command)
+        string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
         {
             if (command.find("push ") == 0) {
                 string e = command.substr(5);

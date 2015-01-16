@@ -12,7 +12,7 @@ class MiniCalc : public Plugin {
         MiniCalc() {}
 
         // call: 12 45
-        string call(const string Channel, const string Nick, const string command)
+        string call(IRCBot &irc_bot, const string Channel, const string Nick, const string command)
         {
             auto add = [] (int x, int y) {return x + 2*y;};
             auto add_reverse = bind(add, _2, _1);

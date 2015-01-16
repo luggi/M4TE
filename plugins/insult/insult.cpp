@@ -17,7 +17,7 @@ class Insult : public Plugin {
     public:
         Insult() {
         }
-        string call(const string channel, const string nick, const string command)
+        string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
         {
             int random = distribution(generator);
             return insults[random];

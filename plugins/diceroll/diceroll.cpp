@@ -15,7 +15,7 @@ class DiceRoll : public Plugin {
         DiceRoll() {
         }
 
-        string call(const string channel, const string nick, const string command)
+        string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
         {
             int randomNumber = distribution(generator);
             string str = to_string(randomNumber);

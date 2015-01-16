@@ -3,6 +3,8 @@
 
 #include <string>
 
+class IRCBot;
+
 using namespace std;
 
 // plugin base class
@@ -10,7 +12,7 @@ class Plugin {
     public:
         virtual ~Plugin() {}
 
-        virtual string call(const string Channel, const string Nick, const string command) = 0;
+        virtual string call(IRCBot &irc_bot, const string Channel, const string Nick, const string command) = 0;
     private:
         string name;
 };

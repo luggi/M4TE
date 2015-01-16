@@ -23,7 +23,7 @@ class PluginManager {
         const vector<string> getPluginNames() const;
         int load(const string pluginName);
         int unload(const string pluginName);
-        std::string call(const string pluginName, const string channel, const string nick, const string command);
+        std::string call(IRCBot &irc_bot, const string pluginName, const string channel, const string nick, const string command);
 
     private:
         map<string, pluginData> my_plugins;

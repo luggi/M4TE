@@ -229,7 +229,7 @@ void IRCBot::process_input_line(const std::string &line)
 
                 command = line.substr(command_pos);
 
-                response = my_plugin_manager.call(plugin_name, channel, nick, command);
+                response = my_plugin_manager.call(*this, plugin_name, channel, nick, command);
 
                 if(response != "") {
                     send_message("PRIVMSG " + channel + " :" + response);

@@ -94,7 +94,7 @@ int PluginManager::unload (const string name) {
 }
 
 
-std::string PluginManager::call(const string pluginName,const string channel, const string nick, const string command) {
+std::string PluginManager::call(IRCBot &irc_bot, const string pluginName,const string channel, const string nick, const string command) {
     std::string plugin_name_lower = pluginName;
     std::transform(plugin_name_lower.begin(), plugin_name_lower.end(), plugin_name_lower.begin(), ::tolower);
 
@@ -106,5 +106,5 @@ std::string PluginManager::call(const string pluginName,const string channel, co
     }
 
     // invoke `call()`
-    return it->second.pluginPtr->call(channel, nick, command);
+    return it->second.pluginPtr->call(irc_bot, channel, nick, command);
 }
