@@ -1,7 +1,5 @@
 #include "Plugin.h"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 #include <random>
 #include <string>
@@ -13,17 +11,21 @@ class Insult : public Plugin {
 
     private:
         static const vector<string> insults;
+        static default_random_engine generator;
+        static uniform_int_distribution<int> distribution;
 
     public:
         Insult() {
-            srand (unsigned(time(NULL)));
         }
         string call(const string channel, const string nick, const string command) const
         {
-            int random = rand() % insults.size();
+            int random = distribution(generator);
             return insults[random];
         }
 };
+
+uniform_int_distribution<int> Insult::distribution(0, Insult::insults.size());
+default_random_engine Insult::generator;
 
 const vector<string> Insult::insults {
     "Bring it noob. I'll give ya memory errors for life!",
