@@ -1,4 +1,4 @@
-pushpop.so: pushpop.o stack.o
+pushpop.so: pushpop.o
 	g++ -shared -o $@ $^
 	cp $@ ../../src/plugins/
 
