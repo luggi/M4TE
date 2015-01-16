@@ -6,23 +6,19 @@
 
 using namespace std;
 
-class DiceRoll : public Plugin {
+class Remind : public Plugin {
     public:
-        DiceRoll()
-        {
-            srand (unsigned(time(NULL)));
-        }
+        Remind()
+        { }
 
         string call(const string channel, const string nick, const string command) const
         {
-            int randomNumber = rand() % 5 + 1;
-            string str = to_string(randomNumber);
-            return str;
+            return "This has to be implemented some time...";
         }
 };
 
 extern "C" Plugin* create() {
-    return new DiceRoll;
+    return new Remind;
 }
 
 extern "C" void destroy(Plugin* p) {
