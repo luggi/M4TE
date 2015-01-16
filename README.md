@@ -13,11 +13,13 @@ Your best buddy in IRC
 - [x] container usage
     - see `src/ConfigManager.cpp`
     - see `src/PluginManager.cpp`
-- [ ] templates
+- [x] templates
+    - see `plugins/pushpop/stack.h`
+    - see `plugins/pushpop/stack.cpp`
 - [x] inheritance
     - see plugins
 - [x] lambda function
-    - see `plugins/MiniCalc/MiniCalc.cpp`
+    - see `plugins/minicalc/minicalc.cpp`
 - [ ] concurrency
 
 ## Requirements
