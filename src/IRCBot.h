@@ -3,6 +3,7 @@
 
 #include <string>
 #include <deque>
+#include <mutex>
 
 #ifdef USE_SFML_SOCKETS
 #include <SFML/Network.hpp>
@@ -44,6 +45,7 @@ class IRCBot
         std::deque<uint8_t> my_network_buffer;
         ConfigManager my_config_manager;
         PluginManager my_plugin_manager;
+        std::mutex my_send_message_mutex;
 };
 
 #endif

@@ -300,6 +300,8 @@ bool IRCBot::send_message(const std::string &msg)
     std::string the_msg = msg;
     the_msg += IRC_LINE_DELIMITERS;
 
+    my_send_message_mutex.lock();
+
     LOG_INFO("SENDING: " + msg);
 
 #ifdef USE_SFML_SOCKETS
@@ -310,6 +312,8 @@ bool IRCBot::send_message(const std::string &msg)
     if (send_count < 0)
         return false;
 #endif
+    my_send_message_mutex.unlock();
+
     return true;
 }
 
