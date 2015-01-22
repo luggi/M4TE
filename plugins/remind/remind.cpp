@@ -1,4 +1,5 @@
 #include "Plugin.h"
+#include "IRCBot.h"
 
 #include <iostream>
 #include <ctime>
@@ -14,10 +15,10 @@ class Remind : public Plugin {
         
         void send_message_later(IRCBot &irc_bot, const string channel, const string nick, int reminderDuration)
         {
-        chrono::milliseconds dura (remiderDuration * 1000);
+        chrono::milliseconds dura (reminderDuration * 1000);
         this_thread::sleep_for(dura);
         
-        irc_bot.send_message("PRIVMSG " + channel + " :" + nick + ": I was told to remind you" + stoi(reminderDuration) + " seconds ago");
+        irc_bot.send_message("PRIVMSG " + channel + " :" + nick + ": I was told to remind you" + to_string(reminderDuration) + " seconds ago");
         }
 
         string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
@@ -37,7 +38,7 @@ class Remind : public Plugin {
             return "wrong argument! usage: !remind [duration in seconds]";
         }
         
-        std::thread timer (send_message_later, irc_bot, channel, nick, seconds);
+        std::thread timer(send_message_later, irc_bot, channel, nick, seconds);
 
             return "Will remind you in" + to_string(seconds) + "seconds.";
         }

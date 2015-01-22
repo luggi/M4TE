@@ -27,11 +27,11 @@ class IRCBot
         void join_channels();
         void wait_for_notice();
         void wait_for_motd();
+        bool send_message(const std::string &msg);
 
     private:
         void process_input_line(const std::string &line);
         bool read_until(const std::string &delimiters, std::string &line);
-        bool send_message(const std::string &msg);
 
 #ifdef USE_SFML_SOCKETS
         sf::TcpSocket my_socket;
