@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -11,11 +12,11 @@ class Insult : public Plugin {
 
     private:
         static const vector<string> insults;
-        static default_random_engine generator;
-        static uniform_int_distribution<int> distribution;
+        default_random_engine generator;
+        uniform_int_distribution<int> distribution;
 
     public:
-        Insult() {
+        Insult() : generator(std::chrono::system_clock::now().time_since_epoch().count()), distribution(0, Insult::insults.size()-1) {
         }
         string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
         {
@@ -23,9 +24,6 @@ class Insult : public Plugin {
             return insults[random];
         }
 };
-
-uniform_int_distribution<int> Insult::distribution(0, Insult::insults.size());
-default_random_engine Insult::generator;
 
 const vector<string> Insult::insults {
     "Bring it noob. I'll give ya memory errors for life!",
