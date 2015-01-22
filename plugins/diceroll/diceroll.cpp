@@ -1,18 +1,18 @@
 #include "Plugin.h"
 
 #include <iostream>
+#include <chrono>
 #include <random>
 
 using namespace std;
 
 class DiceRoll : public Plugin {
     private:
-        static default_random_engine generator;
-        static uniform_int_distribution<int> distribution;
-
+        default_random_engine generator;
+        uniform_int_distribution<int> distribution;
 
     public:
-        DiceRoll() {
+        DiceRoll() : generator(std::chrono::system_clock::now().time_since_epoch().count()), distribution(1,6) {
         }
 
         string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
@@ -22,9 +22,6 @@ class DiceRoll : public Plugin {
             return str;
         }
 };
-
-uniform_int_distribution<int> DiceRoll::distribution(1, 6);
-default_random_engine DiceRoll::generator;
 
 extern "C" Plugin* create() {
     return new DiceRoll;
