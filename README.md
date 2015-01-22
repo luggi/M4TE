@@ -13,9 +13,11 @@ Your best buddy in IRC
 - [x] container usage
     - see `src/ConfigManager.cpp`
     - see `src/PluginManager.cpp`
+- [x] smart pointer
+    - see `plugins/pushpop/pushpop.cpp`
 - [x] templates
     - see `plugins/pushpop/stack.h`
-    - see `plugins/pushpop/stack.cpp`
+    - see `plugins/pushpop/pushpop.cpp`
 - [x] inheritance
     - see plugins
 - [x] lambda function

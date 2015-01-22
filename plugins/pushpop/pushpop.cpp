@@ -1,5 +1,6 @@
 #include "Plugin.h"
 
+#include <memory>
 #include <string>
 
 #include "stack.h"
@@ -9,7 +10,7 @@ using namespace std;
 class Pushpop : public Plugin {
 
     private:
-        Stack<string> stack;
+        Stack<shared_ptr<string>> stack;
 
     public:
         Pushpop()
@@ -20,14 +21,17 @@ class Pushpop : public Plugin {
         string call(IRCBot &irc_bot, const string channel, const string nick, const string command)
         {
             if (command.find("push ") == 0) {
-                string e = command.substr(5);
-                stack.push(e);
-                return "pushed: " + e;
+                // use shared pointer for automatic memory management
+                auto ptr = make_shared<string>(command.substr(5));
+                stack.push(ptr);
+
+                return "pushed: " + *ptr;
             } else if (command.find("pop") == 0) {
                 if (stack.empty()) {
                     return "stack empty";
                 }
-                return "pop: " + stack.pop();
+
+                return "pop: " + *(stack.pop());
             } else if (command.find("clear") == 0) {
                 stack.clear();
                 return "stack cleared";
