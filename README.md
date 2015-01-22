@@ -22,7 +22,7 @@ Your best buddy in IRC
     - see plugins
 - [x] lambda function
     - see `plugins/minicalc/minicalc.cpp`
-- [ ] concurrency
+- [x] concurrency
 
 ## Requirements
 
