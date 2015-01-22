@@ -6,7 +6,7 @@ DEP         := $(OBJ:.o=.d)
 
 CFLAGS      := -Wall -Werror -pedantic -std=c99
 CXXFLAGS    := -Wall -Werror -pedantic -std=c++11
-LDFLAGS     :=
+LDFLAGS     := -rdynamic
 LDLIBS      := -ldl
 
 DEBUG       ?= 0
