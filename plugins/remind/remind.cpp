@@ -38,8 +38,9 @@ class Remind : public Plugin {
             return "wrong argument! usage: !remind [duration in seconds]";
         }
         
-        std::thread (&Remind::send_message_later, Remind(), std::ref(irc_bot), channel, nick, seconds);
-
+        thread t(&Remind::send_message_later, this, ref(irc_bot), channel, nick, seconds);
+        t.detach();
+        
             return "Will remind you in" + to_string(seconds) + "seconds.";
         }
 };
